@@ -5,28 +5,49 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.VideoOptions;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-    // Remove the below line after defining your own ad unit ID.
-    private static final String TOAST_TEXT = "Test ads are being shown. "
-            + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
+import java.util.Timer;
+import java.util.TimerTask;
 
-    private static final int START_LEVEL = 1;
-    private int mLevel;
-    private Button mNextLevelButton;
+public class MainActivity extends AppCompatActivity implements RewardedVideoAdListener {
+    // Remove the below line after defining your own ad unit ID.
+
+
     private InterstitialAd mInterstitialAd;
     private AdView mAdView;
+
+    private WebView wb;
+    private WebSettings webSettings;
+    private RewardedVideoAd mAd;
+
+    Timer t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,23 +55,64 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Create the next level button, which tries to show an interstitial when clicked.
-        mNextLevelButton = ((Button) findViewById(R.id.next_level_button));
-        mNextLevelButton.setEnabled(false);
-        mNextLevelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showInterstitial();
-            }
-        });
+
+
+        mInterstitialAd = newInterstitialAd();
+        loadInterstitial();
+
 
         // Create the text view to show the level number.
 
-        mLevel = START_LEVEL;
+
 
         NativeExpressAdView adView = (NativeExpressAdView)findViewById(R.id.adVieww);
 
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
+
+        adView.setVideoOptions(new VideoOptions.Builder()
+                .setStartMuted(true)
+                .build());
+
+
+
+
+        wb = (WebView)findViewById(R.id.webview);
+
+        wb.setVisibility(View.INVISIBLE);
+        WebSettings webSettings = wb.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        wb.setWebViewClient(new WebViewClient(){
+            public void onPageFinished(WebView view, String url){
+                //Inject javascript code to the url given
+                //Not display the element
+                wb.loadUrl("javascript:(function(){"+"document.getElementById('show').style.display ='none';"+"})()");
+                //Call to a function defined on my myJavaScriptInterface
+                wb.loadUrl("javascript: window.CallToAnAndroidFunction.setVisible()");
+            }
+        });
+
+        //Add a JavaScriptInterface, so I can make calls from the web to Java methods
+        wb.addJavascriptInterface(new myJavaScriptInterface(), "CallToAnAndroidFunction");
+        wb.loadUrl("http://owaisinews.com/");
+
+
+        mAd = MobileAds.getRewardedVideoAdInstance(this);
+        mAd.setRewardedVideoAdListener(this);
+
+        mAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+
+        t = new Timer();
+
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+
+            }
+        },1000 * 5);
+
+
 
 
         /*AdView adView = new AdView(this);
@@ -98,11 +160,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
+
 
         // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
-        Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
+
     }
 
 
@@ -133,18 +194,17 @@ public class MainActivity extends AppCompatActivity {
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                mNextLevelButton.setEnabled(true);
+                showInterstitial();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                mNextLevelButton.setEnabled(true);
+
             }
 
             @Override
             public void onAdClosed() {
-                // Proceed to the next level.
-                goToNextLevel();
+
             }
         });
         return interstitialAd;
@@ -156,23 +216,142 @@ public class MainActivity extends AppCompatActivity {
             mInterstitialAd.show();
         } else {
             Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
-            goToNextLevel();
+
         }
     }
 
     private void loadInterstitial() {
         // Disable the next level button and load the ad.
-        mNextLevelButton.setEnabled(false);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         //mInterstitialAd.loadAd(adRequest);
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+
+
     }
 
-    private void goToNextLevel() {
-        // Show the next level and reload the ad to prepare for the level after.
+    @Override
+    public void onRewardedVideoAdLoaded() {
 
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
     }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+
+    }
+
+
+    private class MyWebViewClient extends WebViewClient {
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            return true;
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+
+        }
+    }
+
+    private class MyWebChromeClient extends WebChromeClient {
+
+
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+
+        }
+
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            Log.d("asdasdasd", message);
+            new AlertDialog.Builder(view.getContext())
+                    .setMessage(message).setCancelable(true).show();
+            result.confirm();
+            return true;
+        }
+
+    }
+
+
+    /*@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && myWebView.canGoBack()) {
+            myWebView.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }*/
+
+    /*@Override
+    public void onBackPressed() {
+
+        if (myWebView.canGoBack())
+        {
+            myWebView.goBack();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+
+    }*/
+
+    public class myJavaScriptInterface {
+        @JavascriptInterface
+        public void setVisible(){
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    wb.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+
+    }
+
+
+
 }
