@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         mAd = MobileAds.getRewardedVideoAdInstance(this);
         mAd.setRewardedVideoAdListener(this);
 
-        mAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+        mAd.loadAd("ca-app-pub-2886077013098249/5014825402", new AdRequest.Builder().build());
 
         t = new Timer();
 
