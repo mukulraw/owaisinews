@@ -23,7 +23,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-2886077013098249/5537569580">
+        ads:adUnitId="ca-app-pub-2886077013098249/3129161927">
     </com.google.android.gms.ads.AdView>
 
 
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        ads:adUnitId="ca-app-pub-2886077013098249/3530530955"
+        ads:adUnitId="ca-app-pub-2886077013098249/8600980453"
         ads:adSize="320x50"
         android:layout_centerHorizontal="true"
 

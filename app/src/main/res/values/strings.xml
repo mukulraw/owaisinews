@@ -10,8 +10,8 @@
         This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
         For more information, see https://support.google.com/admob/answer/3052638
     <!- -->
-    <string name="interstitial_ad_unit_id">ca-app-pub-2886077013098249/2851696499</string>
-    <string name="banner_ad_unit_id">ca-app-pub-2886077013098249/5537569580</string>
-    <string name="native_ad_unit_id">ca-app-pub-2886077013098249/3530530955</string>
-    <string name="video_ad_unit_id">ca-app-pub-2886077013098249/5014825402</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-2886077013098249/3329484231</string>
+    <string name="banner_ad_unit_id">ca-app-pub-2886077013098249/3129161927</string>
+    <string name="native_ad_unit_id">ca-app-pub-2886077013098249/8600980453</string>
+    <string name="video_ad_unit_id">ca-app-pub-2886077013098249/8984123837</string>
 </resources>
