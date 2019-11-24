@@ -1,4 +1,4 @@
-package com.owaisinews.owaisinews;
+package com.minoritiesnews.app;
 
 import org.junit.Test;
 

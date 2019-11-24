@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:\AndroidStudioProjects\owaisinews\J.iml" filepath="D:\AndroidStudioProjects\owaisinews\J.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/owaisinews.iml" filepath="$PROJECT_DIR$/.idea/owaisinews.iml" />
-      <module fileurl="file://D:\AndroidStudioProjects\owaisinews\owaisinews.iml" filepath="D:\AndroidStudioProjects\owaisinews\owaisinews.iml" />
+      <module fileurl="file://$PROJECT_DIR$/owaisinews.iml" filepath="$PROJECT_DIR$/owaisinews.iml" />
     </modules>
   </component>
 </project>

@@ -1,4 +1,4 @@
-package com.owaisinews.owaisinews;
+package com.minoritiesnews.app;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

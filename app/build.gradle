@@ -1,24 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'mukul'
-            keyPassword 'Zedistark1@'
-            storeFile file('C:/Users/Mukul/Desktop/mukul.jks')
-            storePassword 'Zedistark1@'
-        }
-    }
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+
+    compileSdkVersion 29
     defaultConfig {
-        applicationId "com.owaisinews.owaisinews"
-        minSdkVersion 19
-        targetSdkVersion 26
+        applicationId "com.minoritiesnews.app"
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode 5
         versionName "1.4"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.config
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -31,11 +23,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //testcompile 'junit:junit:4.12'
     //androidTestcompile 'com.android.support.test:runner:1.0.1'
     //androidTestcompile 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.android.support:appcompat-v7:26.0.2'
-    compile 'com.google.android.gms:play-services-ads:11.2.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
 }
